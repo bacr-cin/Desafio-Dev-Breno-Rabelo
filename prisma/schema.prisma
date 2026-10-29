@@ -31,7 +31,7 @@ model Planta {
   preco         Int
   estoque       Int
   luminosidade  Luminosidade
-  petfriendly   Boolean
+  petFriendly   Boolean
   regaACadaDias Int
   createdAt     DateTime     @default(now())
   updateAt      DateTime     @updatedAt
