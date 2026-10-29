@@ -108,13 +108,40 @@ export async function criarPlanta(req: Request, res: Response) {
 
 export async function listarPlantas(req: Request, res: Response) {
     try {
-        const plantas = await findAllPlantas(); 
+        const { luminosidade, petFriendly } = req.query;
+        let filtroLuminosidade: Luminosidade | undefined;
+        if (luminosidade !== undefined) {
+            if (!ehLuminosidade(luminosidade)) {
+                return res.status(400).json({
+                message: `Filtro 'luminosidade' inválido. Use um destes valores:
+                ${VALORES_LUMINOSIDADE}.`,
+                });
+            }
+        filtroLuminosidade = luminosidade;
+        }
+
+        let filtroPetFriendly: boolean | undefined;
+        
+        if (petFriendly !== undefined) {
+            if (petFriendly !== "true" && petFriendly !== "false") {
+            return res.status(400).json({ message: "Filtro 'petFriendly' inválido. Use true oufalse." });
+            }
+        filtroPetFriendly = petFriendly === "true";
+        }
+
+        const plantas = await findAllPlantas({
+        luminosidade: filtroLuminosidade,
+        petFriendly: filtroPetFriendly,
+        });
+
         return res.status(200).json(plantas);
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Erro interno ao listar as plantas." });
     }
 }
+
 
 export async function buscarPlanta(req: Request, res: Response) {
     try {
