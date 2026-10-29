@@ -14,7 +14,7 @@ export async function findAllPlantas(filtros: FiltrosPlanta = {}) {
     return prisma.planta.findMany({
         where: {
             luminosidade: filtros.luminosidade,
-            petfriendly: filtros.petFriendly,
+            petFriendly: filtros.petFriendly,
         },
             orderBy: { id: "asc" },
             });
