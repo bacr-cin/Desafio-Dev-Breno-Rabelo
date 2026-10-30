@@ -110,7 +110,7 @@ export async function criarPlanta(req: Request, res: Response) {
 
 export async function listarPlantas(req: Request, res: Response) {
     try {
-        const { luminosidade, petFriendly } = req.query;
+        const { luminosidade, petFriendly, nome, ordem } = req.query;
         let filtroLuminosidade: Luminosidade | undefined;
         if (luminosidade !== undefined) {
             if (!ehLuminosidade(luminosidade)) {
@@ -129,13 +129,30 @@ export async function listarPlantas(req: Request, res: Response) {
         filtroPetFriendly = petFriendly === "true";
         }
 
+        let filtroNome: string | undefined;
+        if (nome !== undefined) {
+            if (!ehTextoNaoVazio(nome)) {
+                return res.status(400).json({ message: "Filtro 'nome' deve ser um texto não vazio." });
+            }
+            filtroNome = nome.trim();
+        }
+
+        let filtroOrdem: "preco" | "nome" | undefined;
+        if (ordem !== undefined) {
+            if (ordem !== "preco" && ordem !== "nome") {
+                return res.status(400).json({ message: "Filtro 'ordem' inválido. Use preco ou nome." });
+            }
+            filtroOrdem = ordem;
+        }
+
         const plantas = await findAllPlantas({
-        luminosidade: filtroLuminosidade,
-        petFriendly: filtroPetFriendly,
+            luminosidade: filtroLuminosidade,
+            petFriendly: filtroPetFriendly,
+            nome: filtroNome,
+            ordem: filtroOrdem,
         });
 
         return res.status(200).json(plantas);
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Erro interno ao listar as plantas." });
