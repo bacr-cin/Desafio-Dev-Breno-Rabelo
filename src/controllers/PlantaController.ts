@@ -115,9 +115,7 @@ export async function listarPlantas(req: Request, res: Response) {
         if (luminosidade !== undefined) {
             if (!ehLuminosidade(luminosidade)) {
                 return res.status(400).json({
-                message: `Filtro 'luminosidade' inválido. Use um destes valores:
-                ${VALORES_LUMINOSIDADE}.`,
-                });
+                message: `Filtro 'luminosidade' inválido. Use um destes valores: ${VALORES_LUMINOSIDADE}.`,});
             }
         filtroLuminosidade = luminosidade;
         }
@@ -126,7 +124,7 @@ export async function listarPlantas(req: Request, res: Response) {
         
         if (petFriendly !== undefined) {
             if (petFriendly !== "true" && petFriendly !== "false") {
-            return res.status(400).json({ message: "Filtro 'petFriendly' inválido. Use true oufalse." });
+            return res.status(400).json({ message: "Filtro 'petFriendly' inválido. Use true ou false." });
             }
         filtroPetFriendly = petFriendly === "true";
         }
