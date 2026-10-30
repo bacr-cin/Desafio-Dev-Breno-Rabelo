@@ -6,6 +6,7 @@ deletePlanta,
 findAllPlantas,
 findPlantaById,
 updatePlanta,
+venderSeHouverEstoque,
 } from "@repositories/PlantaRepository";
 
 type DadosPlanta = {
@@ -217,5 +218,42 @@ export async function deletarPlanta(req: Request, res: Response) {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Erro interno ao deletar a planta." });
+    }
+}
+
+export async function venderPlanta(req: Request, res: Response) {
+    try {
+        const id = lerId(req);
+        if (id === null) {
+            return res.status(400).json({ message: "O id deve ser um número inteiro positivo." });
+        }
+
+        const { quantidade } = req.body ?? {};
+        
+        if (!ehInteiro(quantidade) || quantidade <= 0) {
+            return res.status(400).json({ message: "O campo 'quantidade' deve ser um número inteiro maior que zero." });
+        }
+
+        const planta = await findPlantaById(id);
+        
+        if (planta === null) {
+            return res.status(404).json({ message: `Planta com id ${id} não encontrada.` });
+        }
+        
+        if (planta.estoque < quantidade) {
+            return res.status(400).json({
+            message: `Estoque insuficiente: temos só ${planta.estoque} vaso(s) de ${planta.nome}.`,
+        });
+        }
+        const vendeu = await venderSeHouverEstoque(id, quantidade);
+        if (!vendeu) {
+            return res.status(400).json({ message: "Estoque insuficiente: outra venda terminou antes desta." });
+        }
+
+        const atualizada = await findPlantaById(id);
+        return res.status(200).json(atualizada);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erro interno ao registrar a venda." });
     }
 }

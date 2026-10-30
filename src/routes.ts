@@ -16,7 +16,7 @@ routes.get("/", (req, res) => {
   res.status(200).json({ message: "API do treinamento de CRUD do CITi 🚀" });
 });
 
-//routes.get("/plantas/estoque/valor-total", valorTotalEstoque);
+routes.get("/plantas/estoque/valor-total");//, valorTotalEstoque);
 
 // CRUD de usuários
 routes.post("/users", UserController.createUser);

@@ -31,13 +31,15 @@ export async function deletePlanta(id: number) {
     return prisma.planta.delete({ where: { id } });
 }
 
-export async function decrementEstoque(id: number, quantidade: number) {
-    return prisma.planta.update({
-    where: { id },
-        data: { estoque: { decrement: quantidade } },
-        });
-}
 
 export async function findPrecosEEstoques() {
     return prisma.planta.findMany({ select: { preco: true, estoque: true } });
+}
+
+export async function venderSeHouverEstoque(id: number, quantidade: number) {
+    const resultado = await prisma.planta.updateMany({
+    where: { id, estoque: { gte: quantidade } }, // gte = maior ou igual
+    data: { estoque: { decrement: quantidade } },
+    });
+    return resultado.count > 0; // true: vendeu; false: não havia estoque suficiente
 }
