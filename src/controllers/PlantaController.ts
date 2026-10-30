@@ -7,6 +7,7 @@ findAllPlantas,
 findPlantaById,
 updatePlanta,
 venderSeHouverEstoque,
+findPrecosEEstoques
 } from "@repositories/PlantaRepository";
 
 type DadosPlanta = {
@@ -255,5 +256,22 @@ export async function venderPlanta(req: Request, res: Response) {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Erro interno ao registrar a venda." });
+    }
+}
+
+export async function valorTotalEstoque(_req: Request, res: Response) {
+    try {
+        const plantas = await findPrecosEEstoques();
+        let valorTotalEmCentavos = 0;
+        let totalDeVasos = 0;
+        for (const planta of plantas) {
+            valorTotalEmCentavos += planta.preco * planta.estoque;
+            totalDeVasos += planta.estoque;
+        }
+
+        return res.status(200).json({ valorTotalEmCentavos, totalDeVasos });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erro interno ao calcular o valor do estoque." });
     }
 }
