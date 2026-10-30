@@ -4,6 +4,8 @@ import prisma from "@database";
 export type FiltrosPlanta = {
     luminosidade?: Luminosidade;
     petFriendly?: boolean;
+    nome?: string;
+    ordem?: "preco" | "nome";
 };
 
 export async function createPlanta(dados: Prisma.PlantaCreateInput) {
@@ -11,15 +13,20 @@ return prisma.planta.create({ data: dados });
 }
 
 export async function findAllPlantas(filtros: FiltrosPlanta = {}) {
+    let orderBy: Prisma.PlantaOrderByWithRelationInput = { id: "asc" };
+    if (filtros.ordem === "preco") orderBy = { preco: "asc" };
+    if (filtros.ordem === "nome") orderBy = { nome: "asc" };
+    
     return prisma.planta.findMany({
         where: {
             luminosidade: filtros.luminosidade,
             petFriendly: filtros.petFriendly,
+            nome: filtros.nome === undefined ? undefined : { contains: filtros.nome, mode:
+            "insensitive" },
         },
-            orderBy: { id: "asc" },
-            });
+        orderBy,
+    });
 }
-
 export async function findPlantaById(id: number) {
     return prisma.planta.findUnique({ where: { id } });
 }
