@@ -7,6 +7,7 @@ findAllPlantas,
 findPlantaById,
 updatePlanta,
 venderSeHouverEstoque,
+findPlantasEsgotadas,
 findPrecosEEstoques
 } from "@repositories/PlantaRepository";
 
@@ -288,5 +289,15 @@ export async function valorTotalEstoque(_req: Request, res: Response) {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Erro interno ao calcular o valor do estoque." });
+    }
+}
+
+export async function listarEsgotadas(_req: Request, res: Response) {
+    try {
+        const plantas = await findPlantasEsgotadas();
+        return res.status(200).json(plantas);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erro interno ao listar as plantas esgotadas." });
     }
 }

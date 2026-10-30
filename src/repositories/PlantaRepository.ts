@@ -50,3 +50,7 @@ export async function venderSeHouverEstoque(id: number, quantidade: number) {
     });
     return resultado.count > 0; // true: vendeu; false: não havia estoque suficiente
 }
+
+export async function findPlantasEsgotadas() {
+    return prisma.planta.findMany({ where: { estoque: 0 }, orderBy: { id: "asc" } });
+}

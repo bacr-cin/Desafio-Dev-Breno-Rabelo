@@ -8,6 +8,7 @@ editarPlanta,
 listarPlantas,
 valorTotalEstoque,
 venderPlanta,
+listarEsgotadas
 } from "./controllers/PlantaController";
 
 const routes = express.Router();
@@ -34,5 +35,8 @@ routes.delete("/plantas/:id", deletarPlanta);
 
 //vendas
 routes.post("/plantas/:id/venda", venderPlanta);
+
+//plamtas esgotadas
+routes.get("/plantas/esgotadas", listarEsgotadas);
 
 export default routes;
