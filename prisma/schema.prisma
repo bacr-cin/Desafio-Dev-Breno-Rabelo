@@ -34,7 +34,7 @@ model Planta {
   petFriendly   Boolean
   regaACadaDias Int
   createdAt     DateTime     @default(now())
-  updateAt      DateTime     @updatedAt
+  updatedAt     DateTime     @updatedAt
 }
 
 enum Conta {
