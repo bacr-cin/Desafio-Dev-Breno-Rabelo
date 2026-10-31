@@ -112,10 +112,6 @@ Inseri os dados manualmente no banco e fui testando cada requisição para ver s
 
 Na organização, mantive as mesmas camadas do projeto:
 
-### 🗂️ Organização
-
-Na organização, mantive as mesmas camadas do projeto:
-
 | Camada | Papel |
 |:--:|---|
 | 🛣️ **routes.ts** | O `routes.ts` liga cada método e URL à função certa do controller, sem nenhuma lógica; |
